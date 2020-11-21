@@ -69,7 +69,7 @@ func createCustomerHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, cs)
+	c.JSON(http.StatusCreated, cs)
 }
 
 func updateCustomerHandler(c *gin.Context) {
@@ -128,9 +128,9 @@ func main() {
 	r := gin.Default()
 
 	r.GET("/customers", getAllCustomerHandler)
-	r.GET("/customer/:id", getCustomerByIDHandler)
-	r.POST("/customer", createCustomerHandler)
-	r.PUT("/customer/:id", updateCustomerHandler)
-	r.DELETE("/customer/:id", deleteCustomerByIDHandler)
+	r.GET("/customers/:id", getCustomerByIDHandler)
+	r.POST("/customers", createCustomerHandler)
+	r.PUT("/customers/:id", updateCustomerHandler)
+	r.DELETE("/customers/:id", deleteCustomerByIDHandler)
 	r.Run(":2009")
 }
