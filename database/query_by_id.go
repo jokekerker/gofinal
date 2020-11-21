@@ -5,7 +5,6 @@ import (
 )
 
 func QueryCustomerById(customerId int) (customer.Customer, error) {
-	defer db.Close()
 
 	cs := customer.Customer{}
 

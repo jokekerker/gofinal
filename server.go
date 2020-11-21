@@ -31,6 +31,7 @@ func getCustomerByIDHandler(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	cs := customer.Customer{}
 	if err != nil {
+		log.Fatal("get params id error", err)
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
@@ -71,13 +72,65 @@ func createCustomerHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, cs)
 }
 
+func updateCustomerHandler(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		log.Fatal("get params id error", err)
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	jsonData, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		log.Fatal("get request body error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+
+	cs := customer.Customer{ID: id}
+
+	err = json.Unmarshal(jsonData, &cs)
+	if err != nil {
+		log.Fatal("Unmarshal json error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+
+	cs, err = database.QueryUpdateCustomerByID(id, cs)
+	if err != nil {
+		log.Fatal("query update error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+
+	c.JSON(http.StatusOK, cs)
+}
+
+func deleteCustomerByIDHandler(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	message, err := database.QueryDeleteCustomerByID(id)
+
+	if err != nil {
+		log.Fatal("query delete error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": message})
+}
+
 func main() {
 	r := gin.Default()
 
 	r.GET("/customers", getAllCustomerHandler)
 	r.GET("/customer/:id", getCustomerByIDHandler)
 	r.POST("/customer", createCustomerHandler)
-	// r.GET("/customers", getAllCustomerHandler)
-	// r.GET("/customers", getAllCustomerHandler)
+	r.PUT("/customer/:id", updateCustomerHandler)
+	r.DELETE("/customer/:id", deleteCustomerByIDHandler)
 	r.Run(":2009")
 }

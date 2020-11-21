@@ -8,7 +8,6 @@ var customers = map[int]*customer.Customer{}
 
 func QueryAllCustomer() (map[int]*customer.Customer, error) {
 
-	defer db.Close()
 	queryDb := `
 		select * from customer
 	`

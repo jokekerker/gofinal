@@ -3,7 +3,6 @@ package database
 import "github.com/jokekerker/gofinal/customer"
 
 func QueryCreateCustomer(cs customer.Customer) (customer.Customer, error) {
-	defer db.Close()
 
 	insertDb := `
 		insert into customer 
