@@ -4,9 +4,10 @@ import (
 	"github.com/jokekerker/gofinal/customer"
 )
 
-var customers = map[int]*customer.Customer{}
+// var customers = map[int]*customer.Customer{}
 
-func QueryAllCustomer() (map[int]*customer.Customer, error) {
+func QueryAllCustomer() ([]customer.Customer, error) {
+	customers := []customer.Customer{}
 
 	queryDb := `
 		select * from customer
@@ -31,7 +32,7 @@ func QueryAllCustomer() (map[int]*customer.Customer, error) {
 		if err != nil {
 			return nil, err
 		}
-		customers[c.ID] = &c
+		customers = append(customers, c)
 	}
 
 	return customers, err
