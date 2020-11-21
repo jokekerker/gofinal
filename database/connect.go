@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"os"
 
@@ -17,4 +18,20 @@ func init() {
 	if err != nil {
 		log.Fatal("Connect to database error", err)
 	}
+
+	createDb := `
+	CREATE TABLE IF NOT EXISTS customer (
+		id SERIAL PRIMARY KEY,
+		name TEXT,
+		email TEXT,
+		status TEXT
+	);
+	`
+
+	_, err = db.Exec(createDb)
+
+	if err != nil {
+		log.Fatal("can't create table", err)
+	}
+	fmt.Println("!! Create table complete !!")
 }
